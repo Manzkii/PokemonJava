@@ -24,15 +24,16 @@ public class BattleSystem {
 
         System.out.println(player.name + " is battling " + ai.name);
 
-        while (!player.hasLost && !ai.hasLost && !battleEnded) {
+        while (!player.hasLost && !ai.hasLost && !battleEnded && !player.isGoingOut) {
             if (player.returnequippedPokemon().isDead == false && ai.returnequippedPokemon().isDead == false) {
                 playerCommand(tbs, player);
                 playerMoveChoice = sc.nextInt();
 
                 //repeats playerMoveChoice command if wrong input
-                while (playerMoveChoice < 1 || playerMoveChoice > 4) {
+                while (playerMoveChoice < 1 || playerMoveChoice > 5) {
                     System.out.println("Invalid command, please try again.");
                     playerCommand(tbs, player);
+                    
                     playerMoveChoice = sc.nextInt();
                 }
 
@@ -45,13 +46,21 @@ public class BattleSystem {
                     // Display opponent's HP after the player's attack
                     displayPokemonHP(ai.returnequippedPokemon());
                     System.out.println();
-                } else if (playerMoveChoice == 3) {
-                    System.out.println("Player chose to interact with the bag.");
-                    interactWithBag(ai.returnequippedPokemon(), sc); // Update flag based on catch result
+                }  else if (playerMoveChoice == 4) {
+                    if (player.numofPokemonsAlive() > 1) { // Ensure player has more than one Pokémon alive
+                        System.out.println("Player chose to switch Pokémon.");
+                        switchPokemon(player, sc); // Call the improved function
+                    } else {
+                        System.out.println("You have no other Pokémon to switch to!");
+                    }
+                } else if(playerMoveChoice == 3){
+                    System.out.println("You chose to talk.");
+                    System.out.println("I wonder what happens if you continue.");
+                    player.talk(ai,sc);
                 }
 
                 // Check if the opponent has been defeated
-                if (ai.returnequippedPokemon().isDead) {
+                if (ai.returnequippedPokemon().isDead || player.isGoingOut) {
                     battleEnd(player, bag);
                     battleEnded = true; // End the battle
                     break;
@@ -132,10 +141,10 @@ public class BattleSystem {
                     // Display opponent's HP after the player's attack
                     displayPokemonHP(pokemonOpponent);
                     System.out.println();
-                } if (playerMoveChoice == 3) {
+                } else if (playerMoveChoice == 3) {
                     System.out.println("Player chose to interact with the bag.");
                     interactWithBag(player, pokemonOpponent, sc); // Pass player, pokemonOpponent, and scanner
-                } if (playerMoveChoice == 4) {
+                } else if (playerMoveChoice == 4) {
                     if (player.numofPokemonsAlive() > 1) { // Ensure player has more than one Pokémon alive
                         System.out.println("Player chose to switch Pokémon.");
                         switchPokemon(player, sc); // Call the improved function
@@ -260,7 +269,13 @@ public class BattleSystem {
         System.out.println("What's your move?");
         System.out.println("[1] Physical Attack");
         System.out.println("[2] Elemental Attack");
-        System.out.println("[3] Interact with Bag");
+       
+        if(player.insideGym){
+            System.out.println("[3] Talk");
+        }
+        else{
+            System.out.println("[3] Interact with Bag");
+        }
         System.out.println("[4] Switch Pokémon");
     }
     
@@ -358,10 +373,10 @@ public class BattleSystem {
     public void battleEnd(Player player, Bag bag) {
         System.out.println("You have won the battle!");
         player.receiveRandomPokeballs(bag); // Give the player random Pokéballs
+        player.victory();
+        if(player.insideGym){
+            player.gymsBeaten++;
+        }
         battleEnded = true;
-    }
-
-    private void interactWithBag(Pokemon returnequippedPokemon, Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

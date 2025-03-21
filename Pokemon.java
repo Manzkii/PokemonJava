@@ -5,7 +5,7 @@ enum PokemonTypes{
 public class Pokemon {
     String name;
     PokemonTypes type;
-    public boolean isDead = false;
+    public boolean isDead = false, hasTrainer = false;
     int maxhp, def, sp = 100, patk, eatk, currenthp;
     
 
@@ -17,6 +17,16 @@ public class Pokemon {
         this.def = def;
         this.patk = patk;
         this.eatk = eatk;
+    }
+
+    public Pokemon(Pokemon pokemon) {
+        this.name = pokemon.name;
+        this.type = pokemon.type;
+        this.maxhp = pokemon.maxhp;
+        this.currenthp = pokemon.maxhp;
+        this.def = pokemon.def;
+        this.patk = pokemon.patk;
+        this.eatk = pokemon.eatk;
     }
 
     public void takeDamage(int damage){
@@ -71,6 +81,11 @@ public class Pokemon {
         if(pokemon.currenthp <= 0){
             pokemon.death();
         }
+    }
+
+    public void initializePokemonwithTrainer(Player player){
+        player.pokemonCollection.add(this);
+        this.hasTrainer = true;
     }
     
     

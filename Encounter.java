@@ -17,8 +17,8 @@ public class Encounter{
         return wildPokemon;
     }
 
-    public AITrainer encounterTrainer(){
-        AITrainer wildTrainer = this.zones.get(player.zone).returnTrainerPokemonElement();
+    public AITrainer encounterTrainer(List<String> availableNames){
+        AITrainer wildTrainer = this.zones.get(player.zone).returnTrainerPokemonElement(availableNames);
 
         if(wildTrainer != null){
             System.out.println("You are fighting " + wildTrainer.name + "!");        

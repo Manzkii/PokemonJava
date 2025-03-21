@@ -14,6 +14,7 @@ public class Zone {
     ZoneElements zoneElement;
     int zoneId;
     public boolean finishedZoneGym = false;
+    
 
     public Zone(List<ZoneTypes> zoneType, int zoneId, ZoneElements zoneElement) {
         this.zoneType = zoneType;
@@ -33,16 +34,26 @@ public class Zone {
     }
     
 
-    public AITrainer returnTrainerPokemonElement(){
+    public AITrainer returnTrainerPokemonElement(List<String> availableNames){
         List<Pokemon> filteredPokemons = returnFilteredPokemonbyZoneElement(this.zoneElement);
         Random rand = new Random();
-        AITrainer trainer = new AITrainer(zoneElement + " Gym", 'm');
-        trainer.pokemonCollection.add(filteredPokemons.get(rand.nextInt(filteredPokemons.size())));
-        trainer.pokemonCollection.add(filteredPokemons.get(rand.nextInt(filteredPokemons.size())));
-        trainer.pokemonCollection.add(filteredPokemons.get(rand.nextInt(filteredPokemons.size())));
+        String rolledName = rollName(availableNames);
+        AITrainer trainer = new AITrainer((rolledName + " " + this.zoneElement.name() +" Gym Leader"), 'm');
+        trainer.pokemonCollection.add(new Pokemon (filteredPokemons.get(rand.nextInt(filteredPokemons.size()))));
+        trainer.pokemonCollection.add(new Pokemon (filteredPokemons.get(rand.nextInt(filteredPokemons.size()))));
+        trainer.pokemonCollection.add(new Pokemon (filteredPokemons.get(rand.nextInt(filteredPokemons.size()))));
 
         return trainer;
         
+    }
+    
+    public String rollName(List<String> availableNames){
+        Random random = new Random();
+        int index = random.nextInt(availableNames.size());
+        String selectedName = availableNames.get(index);
+        availableNames.remove(index);
+
+        return selectedName;
     }
 
     private List<Pokemon> returnFilteredPokemonbyZoneElement(ZoneElements zoneElement){

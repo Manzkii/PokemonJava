@@ -35,7 +35,7 @@ public class TurnbasedSystem{
             System.out.println("[2] Blastoise");
             System.out.println("[3] Venosaur");
             starterChoice = sc.nextInt();
-            starterPokemon = Main.starterPokemons[starterChoice -1];
+            starterPokemon = new Pokemon (Main.starterPokemons[starterChoice -1]);
             sc.nextLine();
             proceedDialogue(sc);
         }
@@ -75,7 +75,7 @@ public class TurnbasedSystem{
         int pokeCenterChoice = sc.nextInt();
         
         if (pokeCenterChoice == 1) {
-            player.resetPokemon();
+            player.healPokemon();
             System.out.println("All your Pokémon have been healed!");
         }
     

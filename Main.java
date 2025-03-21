@@ -11,7 +11,7 @@ public class Main {
     }; 
 
     static Pokemon[] firePokemons = {
-        new Pokemon("Charizard", PokemonTypes.Fire, 78, 84, 78, 85),
+        new Pokemon("Charizard", PokemonTypes.Fire, 78, 9999, 9999, 85),
         new Pokemon("Ninetales", PokemonTypes.Fire, 73, 76, 75, 100),
         new Pokemon("Arcanine", PokemonTypes.Fire, 90, 110, 80, 80),
         new Pokemon("Rapidash", PokemonTypes.Fire, 65, 100, 70, 80),
@@ -132,6 +132,8 @@ public class Main {
         groundPokemons, icePokemons, poisonPokemons, fightingPokemons, starterPokemons
     };
 
+    static public List<String> availableNames = new ArrayList<>(AITrainer.names);
+
     public void main(String[] args) {
 
         while (true) { 
@@ -156,8 +158,15 @@ public class Main {
 
 
             while (!player.hasLost) {
-                if (player.gymsBeaten >= 4) { // If the player has beaten 4 Gyms, end the game
-                    System.out.println("Congratulations! You have beaten 4 Gyms and completed the game!");
+                if (player.gymsBeaten >= 8) {
+                    System.out.println("Congratulations! You have beaten all of the gyms and thus, have completed the game.");
+                    System.out.println("You have been awarded the legend trophy.");
+                    System.out.println("[Unlocked the Ending 1 - Legend Ending].");
+                    System.exit(0); // End the game
+                }else if(player.isGoingOut){
+                    System.out.println("Congratulations! You have successfully made a trainer fall for you. You must have played otome games before.");
+                    System.out.println("You have been awarded the otome trophy.");
+                    System.out.println("[Unlocked the Ending 2 - Otome Ending(Make a trainer kyun)].");
                     System.exit(0); // End the game
                 }
             
@@ -174,16 +183,19 @@ public class Main {
                     Pokemon pokemonOpponent = encounterSystem.encounterPokemon();
                     battleSystem.startBattle(pokemonOpponent, player, turnbasedSystem);
                 } else {
-                    AITrainer trainerOpponent = encounterSystem.encounterTrainer();
+                    AITrainer trainerOpponent = encounterSystem.encounterTrainer(availableNames);
                     battleSystem.startBattle(trainerOpponent, player, turnbasedSystem);
                 }
             }
         
             System.out.println("You have lost the game. Restarting...");
             player.restartPlayer(); // Reset Pokémon when restarting
+            availableNames = new ArrayList<>(AITrainer.names);
 
         }
     }
+
+    
 
     public static void zonesDecider(List<Zone> zones){
         int numOfGyms = 8;

@@ -1,11 +1,31 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 ;
 
 public class Player extends Trainer{
     int pokeballs = 0;
-    boolean insideGym;
+    boolean insideGym, isGoingOut;
     
+    public AITrainer goingOutWith;
     public int gymsBeaten = 0;
+
+    ArrayList<String> GoodDialogue = new ArrayList<>(Arrays.asList(
+        "Hey, I just wanted to tell you that your clothing looks really good on you and fits your whole vibe.",
+        "Hii, your hair looks really good and smells like a field surrounded by beautiful and vibrant flowers.",
+        "Your voice sounds so eloquent, every word from your mouth is a sweet rhythm that blesses my ears and fills my stomach with butterflies.",
+        "Hi, your eyes look really good and equally as beautiful as the clear blue skies."
+    ));
+
+    ArrayList<String> BadDialogue = new ArrayList<>(Arrays.asList(
+        "Oh hey, I just wanted to tell you that your fashion sense doesn't make sense and your clothes are as ugly as you.",
+        "Err, how much did it cost to get a haircut as ugly as yours? I want to avoid your barber.",
+        "Can you please stop looking at me with those weird eyes? It's uncomfortable that a swine like you is staring at me.",
+        "Please stop talking, your breath stinks and feels like two clown horns honking in both my ears."
+    ));
 
     public Player(String name, char gender, Pokemon starter){
         super(name, gender);
@@ -55,7 +75,46 @@ public class Player extends Trainer{
         for (Pokemon pokemon : this.pokemonCollection) {
             pokemon.heal(pokemon.maxhp); // Heal the Pokémon to full health
             pokemon.isDead = false; // Reset the fainted status
+            pokemon.hasTrainer = false; //Reset the hasTrainer stat
         }
+    }
+
+    public void healPokemon(){
+        for (Pokemon pokemon : this.pokemonCollection) {
+            pokemon.heal(pokemon.maxhp); // Heal the Pokémon to full health
+            pokemon.isDead = false; // Reset the fainted status
+            
+        }
+    }
+
+    public void talk(AITrainer trainer, Scanner sc){
+        //initiate conversation with trainer
+        Random random = new Random();
+        String goodDialogue = GoodDialogue.get(random.nextInt(GoodDialogue.size()));
+        String badDialogue = BadDialogue.get(random.nextInt(BadDialogue.size()));
+        List<String> dialogues = new ArrayList();
+        dialogues.add(badDialogue);
+        dialogues.add(goodDialogue);
+        Collections.shuffle(dialogues);
+
+        System.out.println("What should you say?");
+        System.out.println("[1] " + dialogues.get(0));
+        System.out.println("[2] " + dialogues.get(1));
+
+        int dialogueChoice = sc.nextInt();
+        boolean isGoodDialogue;
+        while (dialogueChoice < 1 || dialogueChoice > 2) { 
+            dialogueChoice = sc.nextInt();
+        }
+
+        if(dialogues.get(dialogueChoice - 1).equals(goodDialogue)){
+            isGoodDialogue = true;
+        }else{
+            isGoodDialogue = false;
+        }
+        
+
+        trainer.respond(isGoodDialogue, sc, this);
     }
 
     public void receiveRandomPokeballs(Bag bag) {

@@ -47,7 +47,7 @@ public class Catch {
             case "Pokéball": return 50;
             case "Great Ball": return 75;
             case "Ultra Ball": return 90;
-            case "Master Ball": return 100; // Always catches
+            case "Master Ball": return 100000000; // Always catches
             default: return 0;
         }
     }
