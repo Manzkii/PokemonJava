@@ -1,2 +1,1 @@
-# Pok-mon-Java
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+For Java Project
